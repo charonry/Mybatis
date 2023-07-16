@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.init.mybatis_9.dao.EmployeeMapper">
+    <select id="getEmpById" resultType="com.init.mybatis_9.bean.Employee">
+        select * from tbl_employee where id=#{id}
+    </select>
+
+    <select id="getEmps" resultType="com.init.mybatis_9.bean.Employee">
+        select * from tbl_employee
+    </select>
+
+    <insert id="addEmp" useGeneratedKeys="true" keyProperty="id">
+        insert into tbl_employee(last_name,email,gender,empStatus)
+        values(#{lastName},#{email},#{gender},#{empstatus})
+    </insert>
+
+    <resultMap id="oracleMap" type="com.init.mybatis_9.bean.Employee">
+        <id column="id" property="id"></id>
+        <result column="last_name" property="lastName"></result>
+        <result column="email" property="email"/>
+        <result column="gender" property="gender"></result>
+    </resultMap>
+    <!--存储过程用select标签
+    CALLABLE:表示要调用存储过程-->
+    <select id="getPageByProdure" statementType="CALLABLE">
+        {call hello_test(
+        #{start,mode=IN,jdbcType=INTEGER},
+        #{end,mode=IN,jdbcType=INTEGER},
+        #{count,mode=OUT,jdbcType=INTEGER},
+        #{emps,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=oracleMap}
+        )}
+    </select>
+</mapper>
